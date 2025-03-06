@@ -17,7 +17,7 @@ def index():
 def upload():
     data = request.json
     image_data = data['image'].split(',')[1]
-    image = Image.open(io.BytesIO(base64.b64decode(image_data)))
+    image = Image.open(io.BytesIO(base64.b64decode(image_data))).convert('RGB')  # Convert to RGB
     
     # Preprocess the image for the model
     image = image.resize((224, 224))
