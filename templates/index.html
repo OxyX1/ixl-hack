@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Screensharing</title>
+    <style>
+        #canvas {
+            border: 1px solid black;
+        }
+        .box {
+            position: absolute;
+            border: 2px solid yellow;
+        }
+    </style>
+</head>
+<body>
+    <h1>Live Screensharing</h1>
+    <canvas id="canvas"></canvas>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script>
+        const socket = io();
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        socket.on('detection', (boxes) => {
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw detected boxes
+            boxes.forEach(box => {
+                ctx.strokeStyle = 'yellow';
+                ctx.strokeRect(box.x, box.y, box.width, box.height);
+            });
+        });
+
+        // Placeholder for screenshare data
+        function receiveScreenshare(data) {
+            const img = new Image();
+            img.onload = () => {
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+            };
+            img.src = data;
+        }
+    </script>
+</body>
+</html>
