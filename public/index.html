@@ -36,13 +36,25 @@
                     alert('Screen shared successfully! AI is now looking at your screen.');
                 } else {
                     const errorText = await response.text();
+                    copyToClipboard(`Failed to share screen. Error: ${errorText}`);
                     alert(`Failed to share screen. Error: ${errorText}`);
                 }
             } catch (err) {
-                alert(`Error sharing screen: ${err.message}`);
+                const errorMessage = `Error sharing screen: ${err.message}`;
+                copyToClipboard(errorMessage);
+                alert(errorMessage);
                 console.error('Error sharing screen:', err);
             }
         });
+
+        function copyToClipboard(text) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+        }
     </script>
 </body>
 </html>
