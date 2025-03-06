@@ -3,8 +3,13 @@ import pyautogui
 import cv2
 import numpy as np
 import os
+from xvfbwrapper import Xvfb
+import logging
 
 app = Flask(__name__)
+
+# Configure logging
+logging.basicConfig(level=logging.DEBUG)
 
 @app.route('/')
 def index():
@@ -43,12 +48,16 @@ def trace_image():
     # Find contours in the edges
     contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-    # Draw the contours using pyautogui
-    for contour in contours:
-        for point in contour:
-            x, y = point[0]
-            pyautogui.moveTo(x, y)
-            pyautogui.click()
+    # Use Xvfb to create a virtual display
+    with Xvfb() as xvfb:
+        logging.debug("Virtual display started")
+        # Draw the contours using pyautogui
+        for contour in contours:
+            for point in contour:
+                x, y = point[0]
+                pyautogui.moveTo(x, y)
+                pyautogui.click()
+        logging.debug("Image tracing completed")
 
     return jsonify({'message': 'Image traced successfully'})
 
