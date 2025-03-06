@@ -35,9 +35,11 @@
                     document.getElementById('aiObservation').innerText = result.observation;
                     alert('Screen shared successfully! AI is now looking at your screen.');
                 } else {
-                    alert('Failed to share screen.');
+                    const errorText = await response.text();
+                    alert(`Failed to share screen. Error: ${errorText}`);
                 }
             } catch (err) {
+                alert(`Error sharing screen: ${err.message}`);
                 console.error('Error sharing screen:', err);
             }
         });
